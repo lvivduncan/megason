@@ -114,11 +114,20 @@
 			// чЕкаємо на наявність і підсвічуємо
 			for(let i = 0; i<options.length; i++){
 
+				// значення, з який порівнюємо
 				const firstElem = JSON.parse(options[i].value)[0]
 
+				// ціна, яка має бути показана
+				const priceElem = JSON.parse(options[i].value)[1]
+
+				// якщо значення співпало -- додати параментр для відображення
 				if(firstElem === name){
 
+					// робимо активним
 					options[i].selected = 'selected'
+
+					// міняємо ціну
+					options[i].closest('.item').querySelector('.price b').innerText = priceElem;
 				}
 			}
 		});
