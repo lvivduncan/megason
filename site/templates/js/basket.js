@@ -20,13 +20,18 @@
 						JSON.parse(item.querySelector('.sizes select').value)[1], // загальна ціна
 						1,                                                        // кількість
 						JSON.parse(item.querySelector('.sizes select').value)[0], // 0 - розмір
-						JSON.parse(item.querySelector('.sizes select').value)[1]  // 1 - ціна
+						JSON.parse(item.querySelector('.sizes select').value)[1],  // 1 - ціна
+						'','','','',
+						btn.dataset.img // new картинка
 					);
 					
 					// оновлюємо кошик
 					view();
 					issue();
-					msg(btn);
+					// msg(btn);
+
+					// модальне вікно
+					order()
 				}
 			});
 		});		
@@ -44,11 +49,15 @@
 				button.dataset.optionname,  // додаткові опції (назви)
 				button.dataset.optionprice, // додаткові опції (суми)
 				button.dataset.colorname,   // колір
-				button.dataset.colorprice   // колір
+				button.dataset.colorprice,  // колір
+				button.dataset.img          // new картинка
 			);
 
 			// лайтбокс з даними
-			msg(this);
+			// msg(this);
+
+			// модальне вікно
+			order()
 		});
 	}
 
@@ -57,6 +66,76 @@
 
 	// видаляємо товари з кошика
 	document.querySelector('#goods').addEventListener('click', remove);
+
+	// видаляємо товари з модального вікна (оформлення замовлення)
+	// document.querySelector('#issue-goods').addEventListener('click', removeProduct)
+	document.addEventListener('click', event => {
+
+		if(event.target.classList.contains('basket-product-delete')){
+
+			// id товара, який видаляємо
+			const index = event.target.dataset.id
+
+			// якщо у локалСтореджі всього 1 товар, просто очистити кошик і видалити дані з локалСтореджа
+			if(localStorage.getItem('result') == 1){
+
+				// чистимо базу
+				clear()
+
+				// і закриваємо вікно
+				$.fancybox.close()
+			} else {
+
+				// назви товарів
+				const name = localStorage.getItem('name').split('~');
+				name.splice(index, 1);
+				localStorage.setItem('name', name.join('~'));
+
+				// кількість грошей
+				const price = localStorage.getItem('price').split('~');
+				price.splice(index, 1);
+				localStorage.setItem('price', price.join('~'));
+
+				// кількість товарів
+				const result = localStorage.getItem('result');
+				localStorage.setItem('result', result - 1);
+
+				// кількість розмірів
+				const sizeName = localStorage.getItem('sizeName').split('~');
+				sizeName.splice(index, 1);
+				localStorage.setItem('sizeName', sizeName.join('~'));
+				const sizePrice = localStorage.getItem('sizePrice').split('~');
+				sizePrice.splice(index, 1);
+				localStorage.setItem('sizePrice', sizePrice.join('~'));
+
+				// кількість додаткових опцій
+				const optionName = localStorage.getItem('optionName').split('~');
+				optionName.splice(index, 1);
+				localStorage.setItem('optionName', optionName.join('~'));
+				const optionPrice = localStorage.getItem('optionPrice').split('~');
+				optionPrice.splice(index, 1);
+				localStorage.setItem('optionPrice', optionPrice.join('~'));
+
+				// кількість кольорів
+				const colorName = localStorage.getItem('colorName').split('~');
+				colorName.splice(index, 1);
+				localStorage.setItem('colorName', colorName.join('~'));
+				const colorPrice = localStorage.getItem('colorPrice').split('~');
+				colorPrice.splice(index, 1);
+				localStorage.setItem('colorPrice', colorPrice.join('~'));
+
+				// new img
+				const img = localStorage.getItem('img').split('~');
+				img.splice(index, 1);
+				localStorage.setItem('img', img.join('~'));			
+
+				view()
+
+				$.fancybox.close()
+				order()				
+			}
+		}
+	})
 
 	// кнопка очистки локалСтореджа
 	const delGoods = document.querySelector('#del-goods');
@@ -74,8 +153,20 @@
 	 * @sizes - розміри
 	 * @options - додаткові опції
 	 * @colors - колір
+	 * @img - (new) картинка
 	 */
-	function add(name = '', price = '', result = 1, sizeName = '', sizePrice = '', optionName = '', optionPrice = '', colorName = '', colorPrice = '') {
+	function add(
+			name = '', 
+			price = '', 
+			result = 1, 
+			sizeName = '', 
+			sizePrice = '', 
+			optionName = '', 
+			optionPrice = '', 
+			colorName = '', 
+			colorPrice = '', 
+			img = ''
+		) {
 		
 		// якщо кількість не більше 1
 		if (result === 1) {
@@ -141,6 +232,13 @@
 				localStorage.colorPrice += `~${colorPrice}`
 			} else {
 				localStorage.colorPrice = `${colorPrice}`
+			}
+
+			// new img
+			if (localStorage.getItem('img') !== null) {
+				localStorage.img += `~${img}`
+			} else {
+				localStorage.img = `${img}`
 			}
 
 		} else {
@@ -216,6 +314,16 @@
 			} else {
 				localStorage.colorPrice = '';
 			}
+
+			// new img
+			if (localStorage.getItem('img') !== null) {
+				localStorage.img += `~${img}`.repeat(`${result}`);
+			} else if(`${img}` !== null){
+				localStorage.img = `${img}` + `~${img}`.repeat(`${result}`-1);
+			} else {
+				localStorage.img = '';
+			}
+
 		}
 
 		view();
@@ -245,7 +353,8 @@
 			optionName =     // опції
 			optionPrice =    // опції
 			colorName =      // колір
-			colorPrice = []; // колір
+			colorPrice =     // колір
+			img = []         // img
 
 		// складаємо у масиви дані з локалСтореджа
 
@@ -270,6 +379,9 @@
 		localStorage.getItem('colorName') !== null ? colorName = localStorage.colorName.split('~') : colorName.length = 0;
 		localStorage.getItem('colorPrice') !== null ? colorPrice = localStorage.colorPrice.split('~') : colorPrice.length = 0;
 
+		// new img
+		localStorage.getItem('img') !== null ? img = localStorage.img.split('~') : img.length = 0;
+
 		// масив, в який складаємо всі товари
 		const goods = [];
 
@@ -287,7 +399,7 @@
 			);
 		});
 
-		// виводимо дані у кошик
+		// i виводимо дані у кошик
 
 		// перевіряємо за кількістю товарів
 		if (result > 0) {
@@ -313,6 +425,7 @@
 	 * видаляємо по 1 товару з кошика
 	 */
 	function remove(e) {
+
 		// усі товари у кошикові
 		const goods = [...document.querySelector('#goods').childNodes];
 
@@ -366,6 +479,11 @@
 				colorPrice.splice(index, 1);
 				localStorage.setItem('colorPrice', colorPrice.join('~'));
 
+				// new img
+				const img = localStorage.getItem('img').split('~');
+				img.splice(index, 1);
+				localStorage.setItem('img', img.join('~'));			
+
 				view();
 
 			} else if (e.target.nodeName === 'B') {
@@ -411,9 +529,23 @@
 				colorPrice.splice(index, 1);
 				localStorage.setItem('colorPrice', colorPrice.join('~'));
 
+				// new img
+				const img = localStorage.getItem('img').split('~');
+				img.splice(index, 1);
+				localStorage.setItem('name', img.join('~'));
+
 				view();
 			}
 		}
+	}
+
+	/**
+	 * видаляємо товар по 1 з модального вікна
+	 */
+	function removeProduct(e){
+
+		console.log(e)
+
 	}
 
 	/**
@@ -446,7 +578,8 @@
 			optionName =     // опції
 			optionPrice =    // опції
 			colorName =      // колір
-			colorPrice = []; // колір
+			colorPrice =     // колір
+			img = []         // new img
 
 		// назви товарів
 		localStorage.getItem('name') !== null ? name = localStorage.name.split('~') : name.length = 0;
@@ -469,6 +602,9 @@
 		localStorage.getItem('colorName') !== null ? colorName = localStorage.colorName.split('~') : colorName.length = 0;
 		localStorage.getItem('colorPrice') !== null ? colorPrice = localStorage.colorPrice.split('~') : colorPrice.length = 0;
 
+		// new img
+		localStorage.getItem('img') !== null ? img = localStorage.img.split('~') : img.length = 0;
+
 		// масив, в який складаємо всі товари
 		// const goods = [];
 
@@ -482,26 +618,43 @@
 		});
  */
 		name.forEach((item,i) => {
-			goods += `<p><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `размер: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}</p>`
+			// goods += `<p><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `размер: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}</p>`
+
+			goods += `
+				<div class="basket-product">
+					
+					<img src="${img[i]}" alt="" />
+					
+					<div>
+						<b>${name[i]}</b>
+						<p>${price[i]} грн.</p>
+						${(sizeName[i]) ? `<p>Размер: ${sizeName[i]}</p>` : ``}
+						${(optionName[i]) ? `<p>Цена: ${optionName[i]}</p>` : ''}
+						${(colorName[i]) ? `<p>Цвет: ${colorName[i]}</p>` : ''}
+						<button data-id="${i}" class="basket-product-delete">Удалить из корзины</button>
+					</div>
+				</div>`
 		})
 
 		// console.log(goods)
 
 		$.fancybox.open(`
 			<form>
+				<h4 id="issue-title">Оформить заказ?</h4>
+
 				<div id="issue-goods">
-					<h4>Оформить заказ?</h4>
 					${goods}
 				</div>
 
 				<div id="issue-form">
-					<p><input type="text" placeholder="ФИО" required><input type="text" placeholder="Телефон" required></p>
-					<p><input type="text" placeholder="Имейл" required><input type="text" placeholder="Адрес" required></p>
-					<p><textarea placeholder="Примечание"></textarea></p>
-					<p><input type="submit"></p>
+					<input type="text" placeholder="ФИО *" required id="issue-form-name">
+					<input type="text" placeholder="Телефон *" required id="issue-form-phone">
+					<input type="text" placeholder="Имейл *" required id="issue-form-mail">
+					<input type="text" placeholder="Адрес *" required id="issue-form-address">
+					<textarea placeholder="Примечание" id="issue-form-message"></textarea>
+					<input type="submit" id="issue-form-submit">
 					<p>Доставка в пределах Киева 100 гривень. Доставка (в пределах Киева) бесплатная, если заказ более 2000 гривень.</p>
 				</div>
-				<!-- #issue-form -->
 			</form>
         `);
 	}
@@ -509,7 +662,7 @@
 	/**
 	 * фенсібокс-алерт про додавання товару у кошик
 	 */
-	function msg(el){
+/* 	function msg(el){
 		$.fancybox.open(
 			`<div id="issue"> 
 				<div id="issue-flex">
@@ -528,22 +681,7 @@
 
 		// раніше вікно закривалося. тепер тре, щоб можна було міняти опції
 		// setTimeout(() => $.fancybox.close(), 1000);
-	}
-
-/* 	// клік у вікні оформлення
-	document.addEventListener('click', event => {
-
-		console.log(event)
-		
-		if(event.target.id === 'issue-flex' || event.target.parentNode.id === 'issue-flex'){
-			
-			console.log('true')
-		}
-	})
- */
-
-
-
+	} */
 
 	// опрацьовуємо кошик
 	view();

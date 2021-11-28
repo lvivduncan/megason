@@ -2077,13 +2077,14 @@ a:hover {
 
 
 /* оформити, форма, яка зявляється, коли натискають "Оформить" */
-#issue{
+/* del? */
+#issue
+{
     border-radius: 5px;
 }
 
 /* 28-11-2021 */
-/* табличні дані*/
-#issue-flex 
+/* #issue-flex 
 {
     display: flex;
     gap: 5px;
@@ -2095,94 +2096,229 @@ a:hover {
     {
         display: block;
     }
+} */
+/* del? */
+
+
+
+/* заголовок форми */
+#issue-title
+{
+    text-align: center;
+    padding: 0 0 10px;
 }
 
-/* блок, в якому виводяться товари*/
-    #issue-goods{
-        padding: 10px 5px;
+/* товари */
+#issue-goods
+{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+@media(max-width:776px)
+{
+    #issue-goods
+    {
+        grid-template-columns: 1fr;
+    }    
+}
+
+.basket-product
+{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 160px auto;
+}
+
+@media(max-width:450px)
+{
+    .basket-product
+    {
+        grid-template-columns: 1fr;
     }
-        #issue-goods h4{
-            padding: 0 0 10px;
-        }
-        /* Товар добавлен в корзину */
-        #issue-goods h4{
-            padding: 0 0 10px;
-        }
+}
+
+/* зображення товару */
+.basket-product img 
+{
+    border: 2px solid var(--orange);
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* кнопка видалення товару */
+.basket-product-delete 
+{
+    padding: 5px 10px;
+    border: none;
+    display: inline-block;
+    margin: 10px 0 0;
+    cursor: pointer;
+}
 
 /* форма оформлення */
-    #issue-form{
-        padding: 10px 0;
-    }
-        #issue-form p{
-            padding: 0 0 10px;
-            display: flex;
-        }
+#issue-form
+{
+    padding: 10px 0;
+
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+    grid-template-areas:
+        'issue-form-name issue-form-phone'
+        'issue-form-mail issue-form-address'
+        'issue-form-message issue-form-message'
+        'issue-form-submit issue-form-submit'
+        'issue-form-p issue-form-p'
+}
+
+@media(max-width:450px)
+{
+    #issue-form
+    {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'issue-form-name'
+            'issue-form-phone'
+            'issue-form-mail'
+            'issue-form-address'
+            'issue-form-message'
+            'issue-form-submit'
+            'issue-form-p'
+    }    
+}
+
+#issue-form-name
+{
+    grid-area: issue-form-name;
+}
+
+#issue-form-phone
+{
+    grid-area: issue-form-phone;
+}
+
+#issue-form-mail
+{
+    grid-area: issue-form-mail;
+}
+
+#issue-form-address
+{
+    grid-area: issue-form-address;
+}
+
+#issue-form-message
+{
+    grid-area: issue-form-message;
+}
+
+#issue-form-submit
+{
+    grid-area: issue-form-submit;
+}
+
+#issue-form p 
+{
+    grid-area: issue-form-p;
+}
+
+/* #issue-form p
+{
+    padding: 0 0 10px;
+    display: flex;
+}
+
 @media(max-width: 776px){
-    #issue-form p{
+    #issue-form p
+    {
         flex-flow: column;
     }
+} */
+
+/* #issue-form p span
+{
+    padding: 0 0 0 10px;
+    cursor: pointer;
 }
-            #issue-form p span{
-                padding: 0 0 0 10px;
-                cursor: pointer;
-            }
-            #issue-form p span::before{
-                content: ' ';
-                background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkYGBgeCMq91/k9SNGEBsdwOQYQQyYJLpiZDmwKdgUo4vBrUOWQLYeZguKu9AVIzuFdIVEWU2UZ0gOHkIBDgAyWzxH+M6BIgAAAABJRU5ErkJggg==');
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                margin-right: 5px;
-            }
-        #issue-form input[type="text"]{
-            padding: 10px;
-            border: 1px solid var(--blue);
-            outline: none;
-            border-radius: 5px;
-            display: block;
-            font-size: 14px;
-            width: 100%;
-            margin: 0 5px;
-        }
-        #issue-form input[type="text"]:focus{
-            border: 1px solid var(--orange);
-        }
 
-        #issue-form textarea{
-            padding: 10px;
-            border: 1px solid var(--blue);
-            outline: none;
-            border-radius: 5px;
-            display: block;
-            font-size: 14px;
-            width: 100%;
-            margin: 0 5px;
-            resize: vertical;
-        }
-        #issue-form textarea:focus{
-            border: 1px solid var(--orange);
-        }        
-        #issue-form input[type="submit"]{
-            color: var(--lightgray);
-            text-transform: uppercase;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
-            background: var(--orange);
-            outline: none;
-            border: none;
-            text-decoration: none;
-            padding: 7px 10px;
-            text-align: center;
-            white-space: nowrap;
-            cursor: pointer;
-            margin: 0 5px;
-        }
+#issue-form p span::before
+{
+    content: ' ';
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkYGBgeCMq91/k9SNGEBsdwOQYQQyYJLpiZDmwKdgUo4vBrUOWQLYeZguKu9AVIzuFdIVEWU2UZ0gOHkIBDgAyWzxH+M6BIgAAAABJRU5ErkJggg==');
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+} */
 
-            #issue-form p b{
-                padding: 10px;
-                font-weight: bold;
-            }        
+#issue-form input[type="text"]
+{
+    padding: 10px;
+    border: 1px solid var(--blue);
+    outline: none;
+    border-radius: 5px;
+    display: block;
+    font-size: 14px;
+    width: 100%;
+    /* margin: 0 5px; */
+}
+
+#issue-form input[type="text"]:focus
+{
+    border: 1px solid var(--orange);
+}
+
+#issue-form textarea
+{
+    padding: 10px;
+    border: 1px solid var(--blue);
+    outline: none;
+    border-radius: 5px;
+    display: block;
+    font-size: 14px;
+    width: 100%;
+    height: 80px;
+    /* margin: 0 5px; */
+    resize: vertical;
+}
+
+#issue-form textarea:focus
+{
+    border: 1px solid var(--orange);
+}   
+
+#issue-form input[type="submit"]
+{
+    color: var(--lightgray);
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    background: var(--orange);
+    outline: none;
+    border: none;
+    text-decoration: none;
+    padding: 7px 10px;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    /* margin: 0 5px; */
+}
+
+#issue-form p b
+{
+    padding: 10px;
+    font-weight: bold;
+}        
+
+
+
+
 
 /* підвал */
 #footer {
