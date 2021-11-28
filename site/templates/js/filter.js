@@ -70,6 +70,8 @@
 		const filterColors = [...aside.querySelectorAll('#filter-colors input:checked')].map(element => element.value);
 		
 		for (const item of items) {
+
+			// в товарів усі опції співпали
 			if(
 				(+filterMin.value <= item.dataset.price) 
 					&& (+filterMax.value >= item.dataset.price)
@@ -80,6 +82,7 @@
 			){
 				item.parentElement.parentElement.style.display = 'block';
 				
+			// якщо якась опція не співпала -- ховаємо товар
 			} else {
 				item.parentElement.parentElement.style.display = 'none';
 
@@ -93,6 +96,10 @@
 
 	// select 1 item
 	document.querySelectorAll('#sizes input').forEach(item => {
+
+		// option'и. 
+		const options = document.querySelectorAll('.sizes option')
+
 		item.addEventListener('change', function(){
 			
 			if(this.checked === true){
@@ -101,6 +108,21 @@
 				this.checked = true;
 			}
 
+			// назва
+			const name = this.closest('label').textContent.trim()
+
+			// чЕкаємо на наявність і підсвічуємо
+			for(let i = 0; i<options.length; i++){
+
+				const firstElem = JSON.parse(options[i].value)[0]
+
+				if(firstElem === name){
+
+					options[i].selected = 'selected'
+				}
+			}
 		});
 	});
 }
+
+// TODO: оптимізувати дата-атрибути (колись =) ). майже усі опції мають унікальний айді

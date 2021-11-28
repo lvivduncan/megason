@@ -1,16 +1,19 @@
+
+
 // basket.js 08-02-2020
-// переписав, щоб усі параметри лежали в окремих рядках localStorage
-// це дозволе нормально розширяти кошик, а не переписувати його постійно
 {
 
 	// перебираємо усі товари зі сторінки
 	if (document.querySelectorAll('.item') !== null) {
 		document.querySelectorAll('.item').forEach(item => {
 			item.addEventListener('click', e => {
+
 				// батон
 				const btn = item.querySelector('.button');
+
 				// клік на кнопці батона
 				if (e.target === btn) {
+
 					// надсилаємо дані
 					add(
 						btn.dataset.name,                                         // назва товару
@@ -19,6 +22,7 @@
 						JSON.parse(item.querySelector('.sizes select').value)[0], // 0 - розмір
 						JSON.parse(item.querySelector('.sizes select').value)[1]  // 1 - ціна
 					);
+					
 					// оновлюємо кошик
 					view();
 					issue();
@@ -42,6 +46,8 @@
 				button.dataset.colorname,   // колір
 				button.dataset.colorprice   // колір
 			);
+
+			// лайтбокс з даними
 			msg(this);
 		});
 	}
@@ -464,14 +470,22 @@
 		localStorage.getItem('colorPrice') !== null ? colorPrice = localStorage.colorPrice.split('~') : colorPrice.length = 0;
 
 		// масив, в який складаємо всі товари
-		const goods = [];
+		// const goods = [];
+
+		let goods = '';
 
 		// перебираємо циклом всі елементи
-		name.forEach((item, i) => {
+/* 		name.forEach((item, i) => {
 			goods.push(
 				`<br><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `размер: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}`
 			);
 		});
+ */
+		name.forEach((item,i) => {
+			goods += `<p><b>${name[i]}</b> ${price[i]} грн. ${(sizeName[i]) ? `размер: ${sizeName[i]}` : ``} ${optionName[i]} ${colorName[i]}</p>`
+		})
+
+		// console.log(goods)
 
 		$.fancybox.open(`
 			<form>
@@ -479,6 +493,7 @@
 					<h4>Оформить заказ?</h4>
 					${goods}
 				</div>
+
 				<div id="issue-form">
 					<p><input type="text" placeholder="ФИО" required><input type="text" placeholder="Телефон" required></p>
 					<p><input type="text" placeholder="Имейл" required><input type="text" placeholder="Адрес" required></p>
@@ -495,9 +510,40 @@
 	 * фенсібокс-алерт про додавання товару у кошик
 	 */
 	function msg(el){
-		$.fancybox.open(`<div id="issue"> Товар <b>${el.dataset.name}</b> добавлен в корзину </div>`);
-		setTimeout(() => $.fancybox.close(), 1000);
+		$.fancybox.open(
+			`<div id="issue"> 
+				<div id="issue-flex">
+					<div class="img">
+						<img src="${el.dataset.img}" width="200" alt="" />
+					</div>
+					<div class="name">
+						${el.dataset.name}
+					</div>
+					<div class="price">
+						${el.dataset.price} грн
+					</div>
+				</div>
+			</div>`
+			);
+
+		// раніше вікно закривалося. тепер тре, щоб можна було міняти опції
+		// setTimeout(() => $.fancybox.close(), 1000);
 	}
+
+/* 	// клік у вікні оформлення
+	document.addEventListener('click', event => {
+
+		console.log(event)
+		
+		if(event.target.id === 'issue-flex' || event.target.parentNode.id === 'issue-flex'){
+			
+			console.log('true')
+		}
+	})
+ */
+
+
+
 
 	// опрацьовуємо кошик
 	view();

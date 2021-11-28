@@ -2081,6 +2081,22 @@ a:hover {
     border-radius: 5px;
 }
 
+/* 28-11-2021 */
+/* табличні дані*/
+#issue-flex 
+{
+    display: flex;
+    gap: 5px;
+}
+
+@media(max-width:540px)
+{
+    #issue-flex
+    {
+        display: block;
+    }
+}
+
 /* блок, в якому виводяться товари*/
     #issue-goods{
         padding: 10px 5px;
